@@ -32,5 +32,10 @@ export default {
     },
     sliceEndOfObject (obj, length) {
         return Object.entries(obj).slice(-Math.abs(length));
+    },
+    getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 }

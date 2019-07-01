@@ -13,7 +13,7 @@ generator.instantiateQueue();
 generator.events.on('playerAdded', (player) => {
     let server = serverCluster.firstWhere(player.serverHash);
 
-    if(server && server.hasSpacesAvailable()) {
+    if(server) {
         server.addPlayer(player);
     }
 });

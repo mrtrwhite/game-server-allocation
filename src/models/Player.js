@@ -11,6 +11,7 @@ class Player {
 
         this.currentServer = '';
         this.createdAt = new Date();
+        this.connectedAt = '';
     }
 }
 

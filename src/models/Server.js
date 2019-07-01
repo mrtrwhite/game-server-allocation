@@ -4,6 +4,9 @@ import utils from '../utils';
 class Server {
     events;
     players = {};
+    avgWait = 0;
+    formattedAvgWait = 0;
+    canLeave = false;
 
     constructor (mode, region, spaces) {
         this.region = region;
@@ -23,8 +26,15 @@ class Server {
         this.events.on('playerLeft', (player) => {
             this.events.emit('updateServer', this);
         });
+
         this.events.on('playerJoined', (player) => {
             this.events.emit('updateServer', this);
+
+            this.updateAvgWait(player.connectedAt - player.createdAt);
+
+            if(this.playerCount == this.maxSpaces) {
+                this.canLeave = true;
+            }
         });
     }
 
@@ -32,18 +42,16 @@ class Server {
         return this.playerCount() < this.maxSpaces;
     }
 
-    shouldDelete () {
-        return this.playerCount() > (this.maxSpaces * 0.5);
-    }
-
     simulateServer () {
-        let rand =  Math.floor(Math.random() * 2000) + 1000;
+        let rand =  utils.getRandomInt(5000, 10000);
         setTimeout(() => {
-            let playerKeys = Object.keys(this.players);
-            let randomPlayer = playerKeys[Math.floor(Math.random() * playerKeys.length)];
+            if(this.canLeave) {
+                let playerKeys = Object.keys(this.players);
+                let randomPlayer = playerKeys[Math.floor(Math.random() * playerKeys.length)];
 
-            if(typeof this.players[randomPlayer] !== 'undefined' && this.shouldDelete()) {
-                this.deletePlayer(this.players[randomPlayer]);
+                if(typeof this.players[randomPlayer] !== 'undefined') {
+                    this.deletePlayer(this.players[randomPlayer]);
+                }
             }
 
             this.simulateServer();
@@ -63,10 +71,20 @@ class Server {
     }
 
     addPlayer (player) {
-        player.currentServer = this.id;
-        this.players[player.id] = player;
-        this.events.emit('playerJoined', player);
-        this.events.emit('log', `Player '${player.id}' joined server '${this.id}'`);
+        if(this.hasSpacesAvailable()) {
+            player.currentServer = this.id;
+            player.connectedAt = new Date();
+            this.players[player.id] = player;
+            this.events.emit('playerJoined', player);
+            this.events.emit('log', `Player '${player.id}' joined server '${this.id}'`);
+        } else {
+            this.events.emit('log', `Player '${player.id}' bounced from server '${this.id}'`);
+        }
+    }
+
+    updateAvgWait (wait) {
+        this.avgWait = (this.avgWait + wait) / 2;
+        this.formattedAvgWait = Math.round(this.avgWait * 100) / 100;
     }
 
 }

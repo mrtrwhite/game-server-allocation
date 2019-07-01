@@ -33,12 +33,14 @@ class PlayerGenerator {
     }
 
     instantiateQueue () {
-        setInterval(() => {
+        let rand =  utils.getRandomInt(0, 500);
+        setTimeout(() => {
             if(this.run) {
                 let player = this.makeRandomPlayer();
                 this.queue.push(player);
             }
-        }, this.interval);
+            this.instantiateQueue();
+        }, rand);
     }
 
     stop () {

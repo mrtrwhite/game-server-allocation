@@ -9,8 +9,9 @@
 
 ## Next steps
 - I'd like to calculate an average wait time to connect to a game mode and region.
-- I'd like to better visualise what's going on.
 - I'd like cleanup processes for players that have to wait longer than a fixed limit.
+    - If player has to wait longer than max threshhold.
+    - If enough players are waiting in one mode/region, new server spins up.
 
 ## Local setup
 ```
