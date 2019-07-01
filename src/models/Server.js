@@ -41,7 +41,7 @@ class Server {
     }
 
     simulateServer () {
-        let rand =  Math.floor(Math.random() * 800) + 200;
+        let rand =  Math.floor(Math.random() * 2000) + 1000;
         setTimeout(() => {
             let playerKeys = Object.keys(this.players);
             let randomPlayer = playerKeys[Math.floor(Math.random() * playerKeys.length)];
