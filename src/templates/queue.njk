@@ -1,0 +1,5 @@
+<ul class="list">
+    {% for key, player in queue %}
+        <li>{{ player.id }}: Mode: {{ player.mode }}, Region: {{ player.region }}</li>
+    {% endfor %}
+</ul>

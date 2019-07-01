@@ -1,4 +1,7 @@
 import EventEmitter from 'events';
+import utils from '../utils';
+
+let queueTemplate = require('../templates/queue.njk');
 
 class Queue {
     events;
@@ -6,6 +9,11 @@ class Queue {
 
     constructor () {
         this.events = new EventEmitter();
+
+        this.events.on('playerAdded', (player) => {
+            let html = queueTemplate.render({ queue: utils.sliceEndOfObject(this.queueObject, 1000) });
+            document.getElementById('queue').innerHTML = html;
+        });
     }
 
     push (player) {

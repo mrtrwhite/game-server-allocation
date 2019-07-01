@@ -26,5 +26,11 @@ export default {
     },
     sortByCreatedAt (a, b) {
         return new Date(b.createdAt) - new Date(a.createdAt);
+    },
+    sliceObject (obj, length) {
+        return Object.entries(obj).slice(0, length);
+    },
+    sliceEndOfObject (obj, length) {
+        return Object.entries(obj).slice(-Math.abs(length));
     }
 }

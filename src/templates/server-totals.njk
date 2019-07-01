@@ -1,0 +1,5 @@
+<ul class="list">
+    {% for key, server in serverList %}
+        <li>{{ server.mode }} | {{ server.region }}: {{ server.playerCount() }}</li>
+    {% endfor %}
+</ul>

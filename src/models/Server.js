@@ -1,10 +1,6 @@
 import EventEmitter from 'events';
 import utils from '../utils';
 
-// server will need to automate itself
-// if a player leaves, an event should fire
-// if a player joins, an event should fire
-
 class Server {
     events;
     players = {};
@@ -18,7 +14,7 @@ class Server {
 
         this.bindEvents();
 
-        // this method simulates the leaving of players to the server
+        // this method simulates players disconnecting
         // in this experiment players might leave a variable interval between 200ms and 1000ms
         this.simulateServer();
     }
@@ -60,7 +56,7 @@ class Server {
 
     deletePlayer (player) {
         if(typeof this.players[player.id] !== 'undefined') {
-            console.log(`Player '${player.id}' left server '${this.id}'`);
+            this.events.emit('log', `Player '${player.id}' left server '${this.id}'`);
             delete this.players[player.id];
             this.events.emit('playerLeft');
         }
@@ -70,7 +66,7 @@ class Server {
         player.currentServer = this.id;
         this.players[player.id] = player;
         this.events.emit('playerJoined', player);
-        console.log(`Player '${player.id}' joined server '${this.id}'`);
+        this.events.emit('log', `Player '${player.id}' joined server '${this.id}'`);
     }
 
 }

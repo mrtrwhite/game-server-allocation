@@ -2,8 +2,9 @@ import EventEmitter from 'events';
 import utils from './utils';
 import {modes, countries} from './PlayerGenerator';
 import Server from './models/Server';
+import Log from './models/Log';
 
-let serverTemplate = require('./templates/totals.njk');
+let serverTemplate = require('./templates/server-totals.njk');
 
 class ServerCluster {
     events;
@@ -13,6 +14,7 @@ class ServerCluster {
         this.playersPerServer = 32;
         this.events = new EventEmitter();
         this.cluster = {};
+        this.log = new Log();
 
         this.generateServers();
         this.bindEvents();
@@ -20,8 +22,10 @@ class ServerCluster {
 
     bindEvents () {
         this.events.on('serverUpdated', (server) => {
-            let html = serverTemplate.render({ serverList: this.cluster });
-            document.getElementById('app').innerHTML = html;
+            let html = serverTemplate.render({
+                serverList: this.cluster
+            });
+            document.getElementById('servers').innerHTML = html;
         });
     }
 
@@ -30,10 +34,17 @@ class ServerCluster {
 
         for(var p=0;p<permutations.length;p++) {
             let server = new Server(permutations[p][0], permutations[p][1], this.playersPerServer);
-            this.cluster[server.id] = server;
 
             // this is weak
-            this.cluster[server.id].events.on('updateServer', (server) => { this.updateServer(server); });
+            server.events.on('updateServer', (server) => {
+                this.updateServer(server);
+            });
+
+            server.events.on('log', (line) => {
+                this.log.write(line);
+            });
+
+            this.cluster[server.id] = server;
         }
 
         return this.cluster;
