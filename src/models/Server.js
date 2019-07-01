@@ -27,6 +27,10 @@ class Server {
     bindEvents () {
         this.events.on('playerLeft', (player) => {
             this.events.emit('updateServer', this);
+
+            if(this.hasSpacesAvailable()) {
+                this.events.emit('spacesAvailable', this);
+            }
         });
 
         this.events.on('playerJoined', (player) => {
@@ -34,7 +38,7 @@ class Server {
 
             this.updateAvgWait(player.connectedAt - player.createdAt);
 
-            if(this.playerCount == this.maxSpaces) {
+            if(this.playerCount() == this.maxSpaces) {
                 this.canLeave = true;
             }
         });
