@@ -4,7 +4,7 @@ import Queue from './models/Queue';
 
 const queue = new Queue();
 const generator = new PlayerGenerator(100, queue);
-const serverCluster = new ServerCluster();
+const serverCluster = new ServerCluster(queue);
 
 generator.instantiateQueue();
 

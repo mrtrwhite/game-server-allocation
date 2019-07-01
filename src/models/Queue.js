@@ -21,14 +21,25 @@ class Queue {
         this.events.emit('playerAdded', player);
     }
 
-    firstWhere (hash) {
+    where (hash, limit = 0) {
+        let list = [];
+
         for (var p in queueObject) {
             let player = queueObject[p];
             if(player.serverHash === hash) {
-                return player;
-                break;
+                list.push(player);
             }
         }
+
+        if(limit) {
+            return list.slice(0, limit);
+        } else {
+            return list;
+        }
+    }
+
+    firstWhere (hash) {
+        this.where(hash).slice(0, 1);
     }
 
     getPlayer (id) {

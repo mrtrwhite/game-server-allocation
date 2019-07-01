@@ -10,8 +10,9 @@ class ServerCluster {
     events;
     cluster;
 
-    constructor () {
-        this.playersPerServer = 32;
+    constructor (queue) {
+        this.queue = queue;
+        this.playersPerServer = 16;
         this.events = new EventEmitter();
         this.cluster = {};
         this.log = new Log();
@@ -42,6 +43,15 @@ class ServerCluster {
 
             server.events.on('log', (line) => {
                 this.log.write(line);
+            });
+
+            server.events.on('spacesAvailable', (server) => {
+                // this.log.write(`Spaces available on server ${server.id}`);
+                let players = this.queue.where(server.id, server.spacesAvailable());
+
+                for(var i=0;i<players.length;i++) {
+                    server.addPlayer(player);
+                }
             });
 
             this.cluster[server.id] = server;
