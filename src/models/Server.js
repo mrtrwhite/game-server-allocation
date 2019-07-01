@@ -18,9 +18,8 @@ class Server {
 
         this.bindEvents();
 
-        // this method simulates the joining/leaving of players to the server
-        // it simply operates on the assumption that a user might leave or join every five seconds
-        // though obviously in the real work this would be event driven and random
+        // this method simulates the leaving of players to the server
+        // in this experiment players might leave a variable interval between 200ms and 1000ms
         this.simulateServer();
     }
 
@@ -37,15 +36,22 @@ class Server {
         return this.playerCount() < this.maxSpaces;
     }
 
+    shouldDelete () {
+        return this.playerCount() > (this.maxSpaces * 0.5);
+    }
+
     simulateServer () {
-        setInterval(() => {
+        let rand =  Math.floor(Math.random() * 800) + 200;
+        setTimeout(() => {
             let playerKeys = Object.keys(this.players);
             let randomPlayer = playerKeys[Math.floor(Math.random() * playerKeys.length)];
 
-            if(typeof this.players[randomPlayer] !== 'undefined') {
-                this.deletePlayer(randomPlayer);
+            if(typeof this.players[randomPlayer] !== 'undefined' && this.shouldDelete()) {
+                this.deletePlayer(this.players[randomPlayer]);
             }
-        }, 1000);
+
+            this.simulateServer();
+        }, rand);
     }
 
     playerCount () {
