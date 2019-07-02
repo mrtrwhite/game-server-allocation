@@ -2,6 +2,7 @@
 
 ## Algorithms
 - Cartesian Product to determine all the permutations of servers.
+- Hash tables for storing players and servers.
 
 ## Limitations
 - How can I ensure we're not wasting resource on a small number of players?

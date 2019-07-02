@@ -9,7 +9,7 @@ const serverCluster = new ServerCluster(queue);
 generator.instantiateQueue();
 
 // check whether server is available with spaces
-// else leave in queue until space becomes available
+// else create server and assign player
 queue.events.on('playerAdded', (player) => {
     let server = serverCluster.firstWhere(player.serverCategory);
 
