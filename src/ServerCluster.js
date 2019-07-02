@@ -56,13 +56,13 @@ class ServerCluster {
                 this.log.write(line);
             });
 
-            server.events.on('spacesAvailable', (server) => {
-                let players = this.queue.where(server.id, server.spacesAvailable());
-
-                for(var i=0;i<players.length;i++) {
-                    server.addPlayer(player);
-                }
-            });
+            // server.events.on('spacesAvailable', (server) => {
+            //     let players = this.queue.where(server.category, server.spacesAvailable());
+            //
+            //     for(var i=0;i<players.length;i++) {
+            //         server.addPlayer(players[i]);
+            //     }
+            // });
 
             if(typeof this.cluster[server.category] == 'undefined') {
                 this.cluster[server.category] = [];

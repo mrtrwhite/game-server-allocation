@@ -1,12 +1,11 @@
 # A thought experiment on the algorithms behind game server networks (in Javascript)
 
 ## Algorithms
-- Cartesian product to determine all the permutations of servers.
+- Cartesian Product to determine all the permutations of servers.
 
 ## Limitations
-- We only ever have a fixed number of servers, but I'd like to create/destroy servers with greater/less load.
-    - Efficiency. How can I ensure we're not wasting resource on a small number of players?
-- We say that players can't leave a server until it's full `canLeave` but with ordering, an older server could move to the front of the queue by having more players leave, which would mean the newer server would take longer to fill up.
+- How can I ensure we're not wasting resource on a small number of players?
+- We say that players can't leave a server until it's full (`canLeave`) but with ordering, an older server could move to the front of the queue by having more players leave, which would mean the newer server would take longer to fill up.
     - Older servers are rarely ever full because of this.
 - We're updating the entire server object when all we really need is to update the `playerCount`.
 

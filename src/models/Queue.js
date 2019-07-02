@@ -13,32 +13,30 @@ class Queue {
         this.events = new EventEmitter();
 
         this.events.on('playerAdded', (player) => {
-            let html = queueTemplate.render({ queue: utils.sliceEndOfObject(this.queueObject, 1000) });
-            document.getElementById('queue').innerHTML = html;
+            let html = queueTemplate.render({ player: player });
+            document.getElementById('queue').insertAdjacentHTML('beforeend', html);
         });
     }
 
     push (player) {
-        this.queueObject[player.id] = player;
+        if(!this.queueObject[player.serverCategory]) {
+            this.queueObject[player.serverCategory] = [];
+        }
+        this.queueObject[player.serverCategory].push(player);
         this.events.emit('playerAdded', player);
     }
 
-    // slow
     where (category, limit = 0) {
-        let list = [];
+        if(this.queueObject[category]) {
+            let list = this.queueObject[category].sort(this.sortByDate);
 
-        for (var p in this.queueObject) {
-            let player = this.queueObject[p];
-            if(player.serverCategory === category) {
-                list.push(player);
+            if(limit) {
+                return list.slice(0, limit);
+            } else {
+                return list;
             }
         }
-
-        if(limit) {
-            return list.slice(0, limit);
-        } else {
-            return list;
-        }
+        return [];
     }
 
     firstWhere (hash) {
@@ -53,6 +51,16 @@ class Queue {
         if(typeof this.queueObject[player.id] !== 'undefined') {
             delete this.queueObject[player.id];
         }
+    }
+
+    sortByDate (a, b) {
+        if (a.createdAt < b.createdAt) {
+            return -1;
+        }
+        if (a.createdAt > b.createdAt) {
+            return 1;
+        }
+        return 0;
     }
 }
 

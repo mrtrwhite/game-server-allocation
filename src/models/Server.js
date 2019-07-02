@@ -29,9 +29,7 @@ class Server {
         this.events.on('playerLeft', (player) => {
             this.events.emit('updateServer', this);
 
-            if(this.hasSpacesAvailable()) {
-                this.events.emit('spacesAvailable', this);
-            }
+            this.checkForSpacesAvailable();
         });
 
         this.events.on('playerJoined', (player) => {
@@ -72,10 +70,14 @@ class Server {
     // every second check for empty spaces
     pollForSpaces () {
         setInterval(() => {
-            if(this.hasSpacesAvailable()) {
-                this.events.emit('spacesAvailable', this);
-            }
+            this.checkForSpacesAvailable();
         }, 1000);
+    }
+
+    checkForSpacesAvailable () {
+        if(this.hasSpacesAvailable()) {
+            this.events.emit('spacesAvailable', this);
+        }
     }
 
     playerCount () {

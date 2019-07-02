@@ -18,11 +18,7 @@ class PlayerGenerator {
         this.bindEvents();
     }
 
-    bindEvents () {
-        this.queue.events.on('playerAdded', (player) => {
-            this.events.emit('playerAdded', player);
-        });
-    }
+    bindEvents () {}
 
     makeRandomPlayer () {
         let id = utils.makeid(20);
@@ -33,7 +29,7 @@ class PlayerGenerator {
     }
 
     instantiateQueue () {
-        let rand =  utils.getRandomInt(0, 50);
+        let rand =  utils.getRandomInt(0, 500);
         setTimeout(() => {
             if(this.run) {
                 let player = this.makeRandomPlayer();
