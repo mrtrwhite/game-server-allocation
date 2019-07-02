@@ -6,7 +6,6 @@ class Player {
         this.mode = mode;
         this.region = region;
 
-        // in practice i'd imagine you'd generate a number between two ranges
         this.serverCategory = `${this.region}-${this.mode}`;
 
         this.currentServer = '';

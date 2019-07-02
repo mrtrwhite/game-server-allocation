@@ -56,11 +56,11 @@ class ServerCluster {
                 this.log.write(line);
             });
 
-            // server.events.on('spacesAvailable', (server) => {
-            //     let players = this.queue.where(server.category, server.spacesAvailable());
-            //
-            //     for(var i=0;i<players.length;i++) {
-            //         server.addPlayer(players[i]);
+            // why is this so slow?
+            // server.events.on('spaceAvailable', (server) => {
+            //     let player = this.queue.firstWhere(server.category);
+            //     if(player) {
+            //         server.addPlayer(player);
             //     }
             // });
 

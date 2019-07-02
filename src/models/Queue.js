@@ -3,8 +3,6 @@ import utils from '../utils';
 
 let queueTemplate = require('../templates/queue.njk');
 
-// can the queue be optimised?
-
 class Queue {
     events;
     queueObject = {};
@@ -26,32 +24,33 @@ class Queue {
         this.events.emit('playerAdded', player);
     }
 
-    where (category, limit = 0) {
-        if(this.queueObject[category]) {
-            let list = this.queueObject[category].sort(this.sortByDate);
+    slice (items, start, end) {
+        start = start || 0;
+        var len = items.length;
+        var arr = new Array(end - start);
 
-            if(limit) {
-                return list.slice(0, limit);
-            } else {
-                return list;
-            }
+        for (var i = start; i < end; i++){
+            arr[i - start] = items[i];
         }
-        return [];
+
+        return arr;
     }
 
-    firstWhere (hash) {
-        this.where(hash).slice(0, 1);
+    firstWhere (category) {
+        return this.queueObject[category].sort(this.sortByDate)[0];
     }
 
     getPlayer (id) {
         return this.queueObject[id];
     }
 
-    deletePlayer (player) {
-        if(typeof this.queueObject[player.id] !== 'undefined') {
-            delete this.queueObject[player.id];
-        }
-    }
+    // slow
+    // deletePlayer (player) {
+    //     if(typeof this.queueObject[player.serverCategory] !== 'undefined') {
+    //         let index = this.queueObject[player.serverCategory].findIndex((p) => p.id === player.id);
+    //         delete this.queueObject[player.serverCategory][index];
+    //     }
+    // }
 
     sortByDate (a, b) {
         if (a.createdAt < b.createdAt) {

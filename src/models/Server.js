@@ -21,15 +21,15 @@ class Server {
         // this method simulates players disconnecting
         // in this experiment players might leave a variable interval between 200ms and 1000ms
         this.simulateServer();
-
-        this.pollForSpaces();
     }
 
     bindEvents () {
         this.events.on('playerLeft', (player) => {
             this.events.emit('updateServer', this);
 
-            this.checkForSpacesAvailable();
+            // if(this.hasSpacesAvailable()) {
+                this.events.emit('spaceAvailable', this);
+            // }
         });
 
         this.events.on('playerJoined', (player) => {
@@ -65,19 +65,6 @@ class Server {
 
             this.simulateServer();
         }, rand);
-    }
-
-    // every second check for empty spaces
-    pollForSpaces () {
-        setInterval(() => {
-            this.checkForSpacesAvailable();
-        }, 1000);
-    }
-
-    checkForSpacesAvailable () {
-        if(this.hasSpacesAvailable()) {
-            this.events.emit('spacesAvailable', this);
-        }
     }
 
     playerCount () {
