@@ -18,7 +18,6 @@
                 flex: 1;
                 overflow: scroll;
                 color: lightgreen;
-                padding: 15px;
                 background-color: black;
                 font-family: monospace;
                 font-size: 12px;
@@ -27,6 +26,7 @@
                 border-right: 1px solid lightgrey;
                 display: flex;
                 flex-direction: column-reverse;
+                padding: 15px;
             }
             .right {
                 border-left: 1px solid lightgrey;
@@ -42,10 +42,21 @@
             .half {
                 flex: 1;
                 overflow: scroll;
+                padding: 15px;
             }
             .log {
                 display: flex;
                 flex-direction: column-reverse;
+                position: relative;
+            }
+            .log::before {
+                content: " ";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 15px;
+                background-color: black;
             }
         </style>
         <script src="http://localhost:8080/dist/app.js"></script>

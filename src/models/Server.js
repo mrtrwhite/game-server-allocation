@@ -11,7 +11,8 @@ class Server {
     constructor (mode, region, spaces) {
         this.region = region;
         this.mode = mode;
-        this.id = utils.makeHash(`${this.region} ${this.mode}`);
+        this.id = utils.makeid(16);
+        this.category = `${this.region}-${this.mode}`;
         this.maxSpaces = spaces;
         this.events = new EventEmitter();
 
@@ -68,7 +69,7 @@ class Server {
         }, rand);
     }
 
-    // every second, check for empty spaces
+    // every second check for empty spaces
     pollForSpaces () {
         setInterval(() => {
             if(this.hasSpacesAvailable()) {
@@ -90,15 +91,11 @@ class Server {
     }
 
     addPlayer (player) {
-        if(this.hasSpacesAvailable()) {
-            player.currentServer = this.id;
-            player.connectedAt = new Date();
-            this.players[player.id] = player;
-            this.events.emit('playerJoined', player);
-            this.events.emit('log', `Player '${player.id}' joined server '${this.id}'`);
-        } else {
-            this.events.emit('log', `Player '${player.id}' bounced from server '${this.id}'`);
-        }
+        player.currentServer = this.id;
+        player.connectedAt = new Date();
+        this.players[player.id] = player;
+        this.events.emit('playerJoined', player);
+        this.events.emit('log', `Player '${player.id}' joined server '${this.id}'`);
     }
 
     updateAvgWait (wait) {

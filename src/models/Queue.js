@@ -3,6 +3,8 @@ import utils from '../utils';
 
 let queueTemplate = require('../templates/queue.njk');
 
+// can the queue be optimised?
+
 class Queue {
     events;
     queueObject = {};
@@ -21,12 +23,13 @@ class Queue {
         this.events.emit('playerAdded', player);
     }
 
-    where (hash, limit = 0) {
+    // slow
+    where (category, limit = 0) {
         let list = [];
 
-        for (var p in queueObject) {
-            let player = queueObject[p];
-            if(player.serverHash === hash) {
+        for (var p in this.queueObject) {
+            let player = this.queueObject[p];
+            if(player.serverCategory === category) {
                 list.push(player);
             }
         }

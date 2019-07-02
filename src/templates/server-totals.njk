@@ -1,5 +1,12 @@
 <ul class="list">
-    {% for key, server in serverList %}
-        <li>{{ server.mode }} | {{ server.region }}: {{ server.playerCount() }} (Wait: {{ server.formattedAvgWait }})</li>
+    {% for key, category in serverList %}
+        <li>
+            {{ key }}:
+            <ul class="list">
+                {% for server in category %}
+                    <li>{{ server.mode }} | {{ server.region }}: {{ server.playerCount() }} (Wait: {{ server.formattedAvgWait }}ms)</li>
+                {% endfor %}
+            </ul>
+        </li>
     {% endfor %}
 </ul>

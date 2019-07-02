@@ -23,11 +23,22 @@ class ServerCluster {
 
     bindEvents () {
         this.events.on('serverUpdated', (server) => {
-            let html = serverTemplate.render({
-                serverList: this.cluster
-            });
-            document.getElementById('servers').innerHTML = html;
+            this.renderServerList();
+            this.orderCluster(server.category);
         });
+        this.events.on('serverCreated', (server) => {
+            this.renderServerList();
+            this.orderCluster(server.category);
+        });
+    }
+
+    renderServerList () {
+        let html = serverTemplate.render({
+            serverList: this.cluster
+        });
+        if(html) {
+            document.getElementById('servers').innerHTML = html;
+        }
     }
 
     generateServers () {
@@ -46,7 +57,6 @@ class ServerCluster {
             });
 
             server.events.on('spacesAvailable', (server) => {
-                // this.log.write(`Spaces available on server ${server.id}`);
                 let players = this.queue.where(server.id, server.spacesAvailable());
 
                 for(var i=0;i<players.length;i++) {
@@ -54,30 +64,63 @@ class ServerCluster {
                 }
             });
 
-            this.cluster[server.id] = server;
+            if(typeof this.cluster[server.category] == 'undefined') {
+                this.cluster[server.category] = [];
+            }
+
+            this.cluster[server.category].push(server);
         }
 
         return this.cluster;
     }
 
     updateServer (server) {
-        if(typeof this.cluster[server.id] !== 'undefined') {
-            this.cluster[server.id] = server;
-            this.events.emit('serverUpdated', server);
-        }
+        this.cluster[server.category][server.id] = server;
+        this.events.emit('serverUpdated', server);
     }
 
-    firstWhere (hash) {
-        if(typeof this.cluster[hash] !== 'undefined') {
-            return this.cluster[hash];
+    firstWhere (category) {
+        if(typeof this.cluster[category] !== 'undefined') {
+            return this.cluster[category][0];
         }
     }
 
     assignPlayer (player, server) {
-        if(server.hasSpacesAvailable()) {
-            server.addPlayer(player);
-            this.events.emit('playerAssigned', player);
+        server.addPlayer(player);
+        this.events.emit('playerAssigned', player);
+    }
+
+    //
+
+    // optimal way to store servers in this.cluster?
+    // need to quickly be able to find a server by matching game mode & region, with spaces available
+
+    // {
+    //   DE-tdm: [Server, Server]
+    // }
+
+    // 1) store servers in order of spaces available. this will need to update on every serverUpdated event.
+
+    makeServer (mode, region) {
+        let newServer = new Server(mode, region, this.playersPerServer);
+        this.cluster[newServer.category].push(newServer);
+        this.events.emit('serverCreated', newServer);
+        this.log.write(`Server ${newServer.id} created`);
+        return newServer;
+    }
+
+    orderCluster (category) {
+        this.cluster[category] = this.cluster[category].sort(this.sortByPlayerCount);
+    }
+
+    sortByPlayerCount (a, b) {
+        if (a.playerCount() < b.playerCount()) {
+            return -1;
         }
+        if (a.playerCount() > b.playerCount()) {
+            return 1;
+        }
+        return 0;
     }
 
 }

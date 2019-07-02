@@ -11,10 +11,15 @@ generator.instantiateQueue();
 // check whether server is available with spaces
 // else leave in queue until space becomes available
 generator.events.on('playerAdded', (player) => {
-    let server = serverCluster.firstWhere(player.serverHash);
+    let server = serverCluster.firstWhere(player.serverCategory);
 
     if(server) {
-        server.addPlayer(player);
+        if(server.hasSpacesAvailable()) {
+            server.addPlayer(player);
+        } else {
+            let server = serverCluster.makeServer(player.mode, player.region);
+            server.addPlayer(player);
+        }
     }
 });
 

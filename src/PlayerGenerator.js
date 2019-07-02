@@ -33,7 +33,7 @@ class PlayerGenerator {
     }
 
     instantiateQueue () {
-        let rand =  utils.getRandomInt(0, 500);
+        let rand =  utils.getRandomInt(0, 50);
         setTimeout(() => {
             if(this.run) {
                 let player = this.makeRandomPlayer();

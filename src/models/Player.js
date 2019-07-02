@@ -7,7 +7,7 @@ class Player {
         this.region = region;
 
         // in practice i'd imagine you'd generate a number between two ranges
-        this.serverHash = utils.makeHash(`${this.region} ${this.mode}`);
+        this.serverCategory = `${this.region}-${this.mode}`;
 
         this.currentServer = '';
         this.createdAt = new Date();
